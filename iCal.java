@@ -15,14 +15,23 @@ import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.Date;
 
-//EDIT TEST FOR ECLIPSE AND GITHUB SYNC!!
-
 public class iCal {
 	public static void main(String[] args) {
 		
-		List<Float> x = new ArrayList<Float>();
-		List<Float> y = new ArrayList<Float>();
-		List<String> withGeo = new ArrayList<String>();
+		List<Float> x = new ArrayList<Float>(); //stores x coordinates when geolocation given
+		List<Float> y = new ArrayList<Float>(); //stores y coordinates when geolocation given
+		List<String> withGeo = new ArrayList<String>(); //stores event name when geolocation given
+		
+		List<String> EventName = new ArrayList<String>();
+		List<String> EventCat = new ArrayList<String>();
+		List<String> EventStartDate = new ArrayList<String>();
+		List<String> EventEndDate = new ArrayList<String>();
+		List<String> EventStartTime = new ArrayList<String>();
+		List<String> EventEndTime = new ArrayList<String>();
+		List<String> EventPlace = new ArrayList<String>();
+		List<String> EventDesc = new ArrayList<String>();
+		List<String> EventClass = new ArrayList<String>();
+		List<String> gCircDis = new ArrayList<String>();
 		int n = 0; //number of events with geo location
 
 		Scanner in = new Scanner(System.in);
@@ -33,62 +42,66 @@ public class iCal {
 
 		// EVENT NAME INPUT
 		System.out.print("Event Name:");
-		String EventName = in.nextLine();
+		String getEventName = in.nextLine();
+		EventName.add(getEventName);
 
 		// EVENT NAME INPUT
 		System.out.print("Category:");
-		String EventCat = in.nextLine();
+		String getCat = in.nextLine();
+		EventCat.add(getCat);
 
 		// DATE START INPUT
-		String EventStartDate = "";
+		String getEventStartDate = "";
 		boolean dateFlag = true;
 		do {
 			try {
 				System.out.print("Start Date:");
-				EventStartDate = in.nextLine();
+				getEventStartDate = in.nextLine();
 				// Format of the date expected in EventStartDate string
 				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 				// Converting the EventStartDate String to Date
-				Date date = format.parse(EventStartDate);
+				Date date = format.parse(getEventStartDate);
 				// Desired format: yyyyMMdd
 				format = new SimpleDateFormat("yyyyMMdd");
 				// Changing the format of date and storing it in String
-				EventStartDate = format.format(date);
+				getEventStartDate = format.format(date);
 				dateFlag = false; // ends loop if correct format used
+				EventStartDate.add(getEventStartDate);
 			} catch (ParseException e) {
 				System.out.println("! ! valid dates in MM/DD/YYYY format ! !");
 			}
 		} while (dateFlag == true);
 
 		// DATE END INPUT
-		String EventEndDate = "";
+		String getEventEndDate = "";
 		dateFlag = true;
 		do {
 			try {
 				System.out.print("End Date:");
-				EventEndDate = in.nextLine();
+				getEventEndDate = in.nextLine();
 				// Format of the date expected in EventEndDate string
 				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 				// Converting the EventEndDate String to Date
-				Date date = format.parse(EventEndDate);
+				Date date = format.parse(getEventEndDate);
 				// Desired format: yyyyMMdd
 				format = new SimpleDateFormat("yyyyMMdd");
 				// Changing the format of date and storing it in String
-				EventEndDate = format.format(date);
+				getEventEndDate = format.format(date);
 				dateFlag = false; // ends loop if correct format used
+				EventEndDate.add(getEventEndDate);
 			} catch (ParseException e) {
 				System.out.println("! ! valid dates in MM/DD/YYYY format ! !");
 			}
 		} while (dateFlag == true);
 
 		// TIME START INPUT
-		String EventStartTime = "";
+		String getEventStartTime = "";
 		boolean timeFlag = true;
 
 		do {
 			try {
 				System.out.print("Start Time:");
-				EventStartTime = in.nextLine();
+				getEventStartTime = in.nextLine();
 				// Format of the date expected in EventStartTime string
 				DateFormat tFormat = new SimpleDateFormat("hh:mm aa");
 				// Desired format: 24 hour format
@@ -96,23 +109,24 @@ public class iCal {
 				Date asDate = null;
 
 				// Converting the input String to Date
-				asDate = tFormat.parse(EventStartTime);
+				asDate = tFormat.parse(getEventStartTime);
 				// Changing the format of date and storing it in String
-				EventStartTime = outputformat.format(asDate);
+				getEventStartTime = outputformat.format(asDate);
 				timeFlag = false; // ends loop if correct format used
+				EventStartTime.add(getEventStartTime);
 			} catch (ParseException pe) {
 				System.out.println("! ! valid time in hh:mm am/pm ! ! ");
 			}
 		} while (timeFlag == true);
 
 		// TIME END INPUT
-		String EventEndTime = "";
+		String getEventEndTime = "";
 		timeFlag = true;
 
 		do {
 			try {
 				System.out.print("End Time:");
-				EventEndTime = in.nextLine();
+				getEventEndTime = in.nextLine();
 				// Format of the date expected in EventEndTime string
 				DateFormat tFormat = new SimpleDateFormat("hh:mm aa");
 				// Desired format: 24 hour format
@@ -120,10 +134,11 @@ public class iCal {
 				Date asDate = null;
 
 				// Converting the EventEndTime String to Date
-				asDate = tFormat.parse(EventEndTime);
+				asDate = tFormat.parse(getEventEndTime);
 				// Changing the format of date and storing it in String
-				EventEndTime = outputformat.format(asDate);
+				getEventEndTime = outputformat.format(asDate);
 				timeFlag = false; // ends loop if correct format used
+				EventEndTime.add(getEventEndTime);
 			} catch (ParseException pe) {
 				System.out.println("! ! valid time in hh:mm am/pm ! ! ");
 			}
@@ -131,7 +146,8 @@ public class iCal {
 
 		// PLACE INPUT
 		System.out.print("Place:");
-		String EventPlace = in.nextLine();
+		String getEventPlace = in.nextLine();
+		EventPlace.add(getEventPlace);
 
 		// GEO LOCATION INPUT
 		System.out.print("Add Geo Location? (y/n):");
@@ -141,8 +157,9 @@ public class iCal {
 		String EventGeoLon = "";
 		float GeoLat = 0;
 		float GeoLon = 0;
+		boolean GeoFlag = true;
 
-		if (Geo.equalsIgnoreCase("y")) {
+		if (Geo.equalsIgnoreCase("y") || Geo.equalsIgnoreCase("yes")) {
 			boolean latFlag = true;
 			boolean lonFlag = true;
 			System.out.println("Geo coordinates...");
@@ -176,74 +193,41 @@ public class iCal {
 			EventGeoLon = String.valueOf(GeoLon);
 			x.add(GeoLat);
 		    y.add(GeoLon);
-		    withGeo.add(EventName);
+		    withGeo.add(getEventName);
+		    gCircDis.add(null);
 		    n++;
+		}
+		else if(Geo.equalsIgnoreCase("n") || Geo.equalsIgnoreCase("no")){
+			GeoFlag = false; 
+			x.add(null);
+			y.add(null);
+			withGeo.add(null);
+			gCircDis.add(null);
+			
+			
 		}
 
 		System.out.print("Additional notes:");
-		String EventDesc = in.nextLine();
+		String getEventDesc = in.nextLine();
+		EventDesc.add(getEventDesc);
 
 		System.out.print("Public/Private?:");
-		String EventClass = in.nextLine();
-		if (EventClass.equalsIgnoreCase("public")) {
-			EventClass = "PUBLIC";
-		} else if (EventClass.equalsIgnoreCase("private")) {
-			EventClass = "PRIVATE";
+		String getEventClass = in.nextLine();
+		if (getEventClass.equalsIgnoreCase("public")) {
+			getEventClass = "PUBLIC";
+			EventClass.add(getEventClass);
+		} else if (getEventClass.equalsIgnoreCase("private")) {
+			getEventClass = "PRIVATE";
+			EventClass.add(getEventClass);
 		} else {
 			System.out.println("Invalid Entry, set as Default: PUBLIC");
-			EventClass = "PUBLIC";
+			getEventClass = "PUBLIC";
+			EventClass.add(getEventClass);
 		}		
 		
-		try {
-			File file = new File("ical_catorze.ics");
-			String Event = "BEGIN:VEVENT" + "\nSUMMARY:" + EventName
-					+ "\nSTATUS:CONFIRMED" + "\nCLASS:" + EventClass
-					+ "\nTRANSP:TRANSPARENT" + "\nDTSTART:" + EventStartDate
-					+ "T" + EventStartTime + "\nDTEND:" + EventEndDate + "T"
-					+ EventEndTime + "\nCATEGORIES:" + EventCat + "\nLOCATION:"
-					+ EventPlace + "\nGEO:" + EventGeoLat + ";" + EventGeoLon
-					+ "\nDESCRIPTION:" + EventDesc + "\nEND:VEVENT\n";
-			String endCal = "END:VCALENDAR\n";
-			// if file doesn't exist, then create it
-			if (!file.exists()) {
-				file.createNewFile();
-				String startCal = "BEGIN:VCALENDAR\n" + "VERSION:2.0\n"
-						+ "PRODID:-//ZContent.net//Zap Calendar 1.0//EN\n"
-						+ "CALSCALE:GREGORIAN\n" + "METHOD:PUBLISH\n";
-				FileWriter fw = new FileWriter(file.getName());
-				BufferedWriter bw = new BufferedWriter(fw);
-				bw.write(startCal + Event + endCal);
-				bw.close();
-			} else {
-				ArrayList<String> list = new ArrayList<String>();
-				FileReader fr = new FileReader(file.getName());
-				BufferedReader br = new BufferedReader(fr);
-				String input;
-				while ((input = br.readLine()) != null) {
-					list.add(input);
-
-				}
-				//System.out.println(list);
-				// list.remove(list.size() - 1);
-				list.set(list.size() - 1, Event + endCal);
-				FileWriter fw = new FileWriter(file.getName());
-				BufferedWriter bw = new BufferedWriter(fw);
-				int c = 0;
-				for (int i = 0; i < list.size() - 1; i++) {
-					bw.write(list.get(i) + "\n");
-					c = i;
-				}
-				c++;
-				bw.write(list.get(c));
-				bw.close();
-			}
-			
-			System.out.println("\nDone, event has been added!");
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
+		
+//ASKS USER IF THEY WOULD LIKE TO ADD A NEW EVENT
 		boolean RunAgainFlag = true;
 		do{
 		System.out.println("Would you like to add another event?");
@@ -285,17 +269,76 @@ public class iCal {
 					angle = Math.toDegrees(angle);
 
 					// each degree on a great circle of Earth is 69.1105 miles
-					double distance = 69.1105 * angle;
+					double miDistance = 69.1105 * angle;
+					double kiloDistance = miDistance*1.609347218694;
+					
+					String GreatCircleDistance = ("Great Circle Distance between " + withGeo.get(i) + " and " + withGeo.get(i+1) + " is " + miDistance + " miles and " + kiloDistance + "in Kilometers.");
 
-					System.out.println("Great Circle Distance between" + withGeo.get(i) + " and " + withGeo.get(i+1) + " is " + distance + " miles");
+					gCircDis.set( i, GreatCircleDistance); 
 				}
 				else{
 					System.out.print("Not enough events added with Geo Location to calculate Great Circle Distance");
 				}
 			}
+			System.out.println("\nThank you for using iCal!");
 		}
 		catch(IndexOutOfBoundsException aoe){
 			System.out.println("\nThank you for using iCal!");
 		}
+		
+		//CREATE .ICS FILE AND PRINT EVENT DETAILS 	
+				try {
+					for(int i = 0; i < EventName.size(); i++){
+					File file = new File("ical_catorze.ics");
+					String Event = "BEGIN:VEVENT" + "\nSUMMARY:" + EventName.get(i)
+							+ "\nSTATUS:CONFIRMED" + "\nCLASS:" + EventClass.get(i)
+							+ "\nTRANSP:TRANSPARENT" + "\nDTSTART:" + EventStartDate.get(i)
+							+ "T" + EventStartTime.get(i) + "\nDTEND:" + EventEndDate.get(i) + "T"
+							+ EventEndTime.get(i) + "\nCATEGORIES:" + EventCat.get(i) + "\nLOCATION:"
+							+ EventPlace.get(i) + "\nGEO:" + x.get(i) + ";" + y.get(i)
+							+ "\nDESCRIPTION:" + EventDesc.get(i) + ", " + gCircDis.get(i) + "\nEND:VEVENT\n";
+					String endCal = "END:VCALENDAR\n";
+					// if file doesn't exist, then create it
+					if (!file.exists()) {
+						file.createNewFile();
+						String startCal = "BEGIN:VCALENDAR\n" + "VERSION:2.0\n"
+								+ "PRODID:-//ZContent.net//Zap Calendar 1.0//EN\n"
+								+ "CALSCALE:GREGORIAN\n" + "METHOD:PUBLISH\n";
+						FileWriter fw = new FileWriter(file.getName());
+						BufferedWriter bw = new BufferedWriter(fw);
+						bw.write(startCal + Event + endCal);
+						bw.close();
+					} else {
+						ArrayList<String> list = new ArrayList<String>();
+						FileReader fr = new FileReader(file.getName());
+						BufferedReader br = new BufferedReader(fr);
+						String input;
+						while ((input = br.readLine()) != null) {
+							list.add(input);
+
+						}
+						//System.out.println(list);
+						// list.remove(list.size() - 1);
+						list.set(list.size() - 1, Event + endCal);
+						FileWriter fw = new FileWriter(file.getName());
+						BufferedWriter bw = new BufferedWriter(fw);
+						int c = 0;
+						for (int q = 0; q < list.size() - 1; q++) {
+							bw.write(list.get(q) + "\n");
+							c = q;
+						}
+						c++;
+						bw.write(list.get(c));
+						bw.close();
+					}
+					System.out.println("\nDone," + EventName.get(i) + " has been added!");
+					}
+					} catch (IOException e) {
+					e.printStackTrace();
+				}
+		//END WRITING EVENTS INTO .ICS FILE
+		
+		
+		
 }
 }
