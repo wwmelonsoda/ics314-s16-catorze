@@ -35,10 +35,42 @@ public class iCal {
 		int n = 0; //number of events with geo location
 
 		Scanner in = new Scanner(System.in);
-		System.out.println("Welcome! Please add a new event to the calendar!");
+		System.out.println("Welcome! What day would you like to add events to?");
+		
+		
+		// DATE START INPUT
+		String getEventDate = "";
+		String theEventDate = "";
+		boolean dateFlag = true;
+		do {
+			try {
+				System.out.print("Start Date:");
+				getEventDate = in.nextLine();
+				theEventDate = getEventDate;
+				// Format of the date expected in EventStartDate string
+				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+				// Converting the EventStartDate String to Date
+				Date date = format.parse(getEventDate);
+				// Desired format: yyyyMMdd
+				format = new SimpleDateFormat("yyyyMMdd");
+				// Changing the format of date and storing it in String
+				getEventDate = format.format(date);
+				dateFlag = false; // ends loop if correct format used
+
+			} catch (ParseException e) {
+				System.out.println("! ! valid dates in MM/DD/YYYY format ! !");
+			}
+		} while (dateFlag == true);
+
+		// DATE END INPUT
+		
+		System.out.println("Now you may add Events to Calendar on " + theEventDate);
 		
 		boolean run = true;
 		while(run){
+			
+			EventStartDate.add(getEventDate);
+			EventEndDate.add(getEventDate);
 
 		// EVENT NAME INPUT
 		System.out.print("Event Name:");
@@ -50,49 +82,6 @@ public class iCal {
 		String getCat = in.nextLine();
 		EventCat.add(getCat);
 
-		// DATE START INPUT
-		String getEventStartDate = "";
-		boolean dateFlag = true;
-		do {
-			try {
-				System.out.print("Start Date:");
-				getEventStartDate = in.nextLine();
-				// Format of the date expected in EventStartDate string
-				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-				// Converting the EventStartDate String to Date
-				Date date = format.parse(getEventStartDate);
-				// Desired format: yyyyMMdd
-				format = new SimpleDateFormat("yyyyMMdd");
-				// Changing the format of date and storing it in String
-				getEventStartDate = format.format(date);
-				dateFlag = false; // ends loop if correct format used
-				EventStartDate.add(getEventStartDate);
-			} catch (ParseException e) {
-				System.out.println("! ! valid dates in MM/DD/YYYY format ! !");
-			}
-		} while (dateFlag == true);
-
-		// DATE END INPUT
-		String getEventEndDate = "";
-		dateFlag = true;
-		do {
-			try {
-				System.out.print("End Date:");
-				getEventEndDate = in.nextLine();
-				// Format of the date expected in EventEndDate string
-				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-				// Converting the EventEndDate String to Date
-				Date date = format.parse(getEventEndDate);
-				// Desired format: yyyyMMdd
-				format = new SimpleDateFormat("yyyyMMdd");
-				// Changing the format of date and storing it in String
-				getEventEndDate = format.format(date);
-				dateFlag = false; // ends loop if correct format used
-				EventEndDate.add(getEventEndDate);
-			} catch (ParseException e) {
-				System.out.println("! ! valid dates in MM/DD/YYYY format ! !");
-			}
-		} while (dateFlag == true);
 
 		// TIME START INPUT
 		String getEventStartTime = "";
