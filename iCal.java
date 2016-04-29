@@ -1,5 +1,3 @@
-package iCalendar;
-
 import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -16,6 +14,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 public class iCal {
+	public static boolean GeoFlag = true;
 	public static void main(String[] args) {
 		
 		List<Float> x = new ArrayList<Float>(); //stores x coordinates when geolocation given
@@ -44,7 +43,7 @@ public class iCal {
 		boolean dateFlag = true;
 		do {
 			try {
-				System.out.print("Start Date:");
+				System.out.print("Date:");
 				getEventDate = in.nextLine();
 				theEventDate = getEventDate;
 				// Format of the date expected in EventStartDate string
@@ -139,6 +138,7 @@ public class iCal {
 		EventPlace.add(getEventPlace);
 
 		// GEO LOCATION INPUT
+		do{
 		System.out.print("Add Geo Location? (y/n):");
 		String Geo = in.nextLine();
 		String EventGeo = "";
@@ -146,7 +146,7 @@ public class iCal {
 		String EventGeoLon = "";
 		float GeoLat = 0;
 		float GeoLon = 0;
-		boolean GeoFlag = true;
+		
 
 		if (Geo.equalsIgnoreCase("y") || Geo.equalsIgnoreCase("yes")) {
 			boolean latFlag = true;
@@ -183,7 +183,8 @@ public class iCal {
 			x.add(GeoLat);
 		    y.add(GeoLon);
 		    withGeo.add(getEventName);
-		    gCircDis.add(null);
+		    gCircDis.add(" ");
+		    GeoFlag = false;
 		    n++;
 		}
 		else if(Geo.equalsIgnoreCase("n") || Geo.equalsIgnoreCase("no")){
@@ -191,10 +192,14 @@ public class iCal {
 			x.add(null);
 			y.add(null);
 			withGeo.add(null);
-			gCircDis.add(null);
+			gCircDis.add(" ");
 			
-			
+			// n++;
+		} else {
+			System.out.println("Enter yes or no");
+			GeoFlag = true;
 		}
+		} while (GeoFlag == true);
 
 		System.out.print("Additional notes:");
 		String getEventDesc = in.nextLine();
@@ -261,12 +266,12 @@ public class iCal {
 					double miDistance = 69.1105 * angle;
 					double kiloDistance = miDistance*1.609347218694;
 					
-					String GreatCircleDistance = ("Great Circle Distance between " + withGeo.get(i) + " and " + withGeo.get(i+1) + " is " + miDistance + " miles and " + kiloDistance + "in Kilometers.");
+					String GreatCircleDistance = ("| Great Circle Distance between " + withGeo.get(i) + " and " + withGeo.get(i+1) + " is " + miDistance + " miles and " + kiloDistance + "in Kilometers.");
 
 					gCircDis.set( i, GreatCircleDistance); 
 				}
 				else{
-					System.out.print("Not enough events added with Geo Location to calculate Great Circle Distance");
+					//System.out.print("Not enough events added with Geo Location to calculate Great Circle Distance");
 				}
 			}
 			System.out.println("\nThank you for using iCal!");
@@ -274,18 +279,27 @@ public class iCal {
 		catch(IndexOutOfBoundsException aoe){
 			System.out.println("\nThank you for using iCal!");
 		}
+		catch(NullPointerException npe){
+			System.out.println("\nThank you for using iCal hahahaha!");
+		}
+				
+		
 		
 		//CREATE .ICS FILE AND PRINT EVENT DETAILS 	
 				try {
 					for(int i = 0; i < EventName.size(); i++){
 					File file = new File("ical_catorze.ics");
-					String Event = "BEGIN:VEVENT" + "\nSUMMARY:" + EventName.get(i)
-							+ "\nSTATUS:CONFIRMED" + "\nCLASS:" + EventClass.get(i)
-							+ "\nTRANSP:TRANSPARENT" + "\nDTSTART:" + EventStartDate.get(i)
-							+ "T" + EventStartTime.get(i) + "\nDTEND:" + EventEndDate.get(i) + "T"
-							+ EventEndTime.get(i) + "\nCATEGORIES:" + EventCat.get(i) + "\nLOCATION:"
-							+ EventPlace.get(i) + "\nGEO:" + x.get(i) + ";" + y.get(i)
-							+ "\nDESCRIPTION:" + EventDesc.get(i) + ", " + gCircDis.get(i) + "\nEND:VEVENT\n";
+					String Event = "";
+						
+						Event = "BEGIN:VEVENT" + "\nSUMMARY:" + EventName.get(i)
+						+ "\nSTATUS:CONFIRMED" + "\nCLASS:" + EventClass.get(i)
+						+ "\nTRANSP:TRANSPARENT" + "\nDTSTART:" + EventStartDate.get(i)
+						+ "T" + EventStartTime.get(i) + "\nDTEND:" + EventEndDate.get(i) + "T"
+						+ EventEndTime.get(i) + "\nCATEGORIES:" + EventCat.get(i) + "\nLOCATION:"
+						+ EventPlace.get(i) + "\nGEO:" + x.get(i) + ";" + y.get(i)
+						+ "\nDESCRIPTION:" + EventDesc.get(i) + gCircDis.get(i) + "\nEND:VEVENT\n";			
+						
+					
 					String endCal = "END:VCALENDAR\n";
 					// if file doesn't exist, then create it
 					if (!file.exists()) {
@@ -331,3 +345,6 @@ public class iCal {
 		
 }
 }
+		
+		
+
